@@ -1,43 +1,38 @@
 # VibeSync deployment guide
 
-Two services, one repo:
+Two services, one repo — **both are deployed already**:
 
-- **Frontend** (Next.js, repo root) → **Vercel**
-- **Backend** (Express + Socket.IO, `backend/`) → **Render**
+- **Frontend** (Next.js, repo root) → **Vercel** → project `vibesync` (account shivay14777-3130)
+- **Backend** (Express + Socket.IO, `backend/`) → **Render** → https://vibesync-backend-ewho.onrender.com
 
-## 1. Backend on Render
+To redeploy:
+- **Backend**: every `git push` to `main` auto-deploys it on Render (`autoDeployTrigger: commit` in `render.yaml`).
+- **Frontend**: re-run the upload deploy (or connect the repo in the Vercel dashboard for auto-deploys).
 
-1. Push this repo to GitHub (see below).
-2. Dashboard → **New → Blueprint** → pick the repo → Apply.
-   (Or **New → Web Service**, root directory `backend`, build `npm install`, start `npm start`.)
-3. Render gives you something like `https://vibesync-backend.onrender.com`.
+## Backend (Render)
 
-`render.yaml` already sets:
-- runtime node, rootDir `backend`
-- health check at `/health`
-- `PORT` is read from the environment automatically (`process.env.PORT || 3001`)
+`render.yaml` sets everything: runtime node, rootDir `backend`, health check `/health`,
+plan free, region oregon. `PORT` is read from the environment automatically.
 
 ⚠️ **Free plan: the service sleeps after ~15 min of no traffic.** Rooms held in RAM +
 `rooms-state.json` are wiped when it wakes cold. Keep it awake with a free uptime
-monitor pinging `https://<your-backend>.onrender.com/health` every 5–10 min
-(e.g. UptimeRobot, cron-job.org).
+monitor pinging `https://vibesync-backend-ewho.onrender.com/health` every 5–10 min
+(e.g. UptimeRobot, cron-job.org) or a local scheduled task while you listen.
 
-## 2. Frontend on Vercel
+## Frontend (Vercel)
 
-1. Import the GitHub repo at vercel.com/new (or use `npx vercel --prod`).
-2. **Set the environment variable BEFORE the first build** (it's baked into the bundle):
-   - Key: `NEXT_PUBLIC_SOCKET_URL`
-   - Value: your Render backend URL, e.g. `https://vibesync-backend.onrender.com`
-3. Deploy. Done.
+The env var must be baked in **before** the build (it's compiled into the bundle):
 
-## 3. Push to GitHub
+- Key: `NEXT_PUBLIC_SOCKET_URL`
+- Value: `https://vibesync-backend-ewho.onrender.com`
+- Targets: production + preview
+
+## Push to GitHub
 
 ```bash
-git init
 git add -A
-git commit -m "VibeSync"
-git remote add origin https://github.com/<you>/<repo>.git
-git push -u origin main
+git commit -m "changes"
+git push origin main    # auto-deploys the backend on Render
 ```
 
 ## Local dev (unchanged)
