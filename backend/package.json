@@ -1,0 +1,21 @@
+{
+  "name": "vibe-sync-backend",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^4.22.3",
+    "socket.io": "^4.8.4",
+    "yt-search": "^2.13.1",
+    "ytmusic-api": "^5.3.1"
+  },
+  "description": "",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

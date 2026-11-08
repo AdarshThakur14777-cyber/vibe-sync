@@ -1,0 +1,527 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: #0a0a0a;
+    color: #ffffff;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    overflow-x: clip;
+    overscroll-behavior-y: contain;
+    position: relative;
+  }
+
+  :focus-visible {
+    outline: 2px solid #a78bfa;
+    outline-offset: 3px;
+  }
+
+  /* Mobile-first interactions: kill tap flash, stop double-tap zoom delay */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button,
+  a,
+  [role="button"],
+  label,
+  input[type="range"] {
+    touch-action: manipulation;
+  }
+
+  /* iOS auto-zooms into inputs below 16px — keep mobile fields readable */
+  @media (max-width: 639px) {
+    input:not([type="range"]),
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #333333 #0a0a0a;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: #333333;
+    border-radius: 4px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: #555555;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    background: rgba(30, 30, 30, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+  }
+
+  .glass-panel-hover {
+    transition: all 0.3s ease;
+  }
+
+  .glass-panel-hover:hover {
+    border-color: rgba(139, 92, 246, 0.3);
+    background: rgba(30, 30, 30, 0.9);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #fb7185 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-bg {
+    background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #fb7185 100%);
+  }
+
+  .audio-visualizer-bar {
+    transition: height 0.1s ease;
+  }
+
+  .room-card {
+    transition: all 0.2s ease;
+  }
+
+  .room-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .track-item {
+    transition: all 0.15s ease;
+  }
+
+  .track-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* room-card/track-item hover styles are desktop-only; on touch they stick */
+  @media (hover: none) {
+    .room-card:hover {
+      transform: none;
+    }
+
+    .track-item:hover {
+      background: transparent;
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Fit inside notches/home-bar area on phones */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
+/* Hide scrollbar for clean UI but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Mobile room tabs: full player screen plus a Spotify-style player dock on Chat/Queue. */
+@media (max-width: 1279px) {
+  .room-shell,
+  .host-shell {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .room-header,
+  .host-header {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .room-header {
+    height: calc(3.5rem + env(safe-area-inset-top, 0px)) !important;
+  }
+
+  .host-header {
+    height: calc(4rem + env(safe-area-inset-top, 0px)) !important;
+  }
+
+  .mobile-player-pane,
+  .mobile-player-pane * {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+  }
+
+  .mobile-player-pane::-webkit-scrollbar,
+  .mobile-player-pane *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .mobile-player-pane--full {
+    flex: 1 1 0% !important;
+    width: 100%;
+    height: auto !important;
+    padding: 0.625rem !important;
+  }
+
+  .mobile-player-pane--full .mini-host-bar {
+    margin-bottom: 0.5rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  .mobile-player-pane--full .mini-player-card {
+    flex: 1 1 0% !important;
+    width: 100%;
+    /* Phones use the full width; larger phone/tablet widths get a centered
+       card (like Spotify's now-playing screen) instead of a stretched one. */
+    max-width: min(34rem, 100%);
+    min-height: 0;
+    margin: 0 auto !important;
+    padding: 1rem !important;
+    border-radius: 1rem !important;
+  }
+
+  .mobile-player-pane--full .mini-player-content {
+    justify-content: space-around;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .mobile-player-pane--full .mini-track-heading {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem !important;
+    margin: 0 !important;
+  }
+
+  .mobile-player-pane--full .mini-track-art {
+    width: clamp(9rem, 34dvh, 16rem) !important;
+    height: clamp(9rem, 34dvh, 16rem) !important;
+  }
+
+  .mobile-player-pane--full .mini-track-heading > div:last-child {
+    width: 100%;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .mobile-player-pane--full .mobile-now-playing {
+    display: flex !important;
+  }
+
+  .mobile-player-pane--full .mobile-volume-control {
+    display: block !important;
+    margin-top: 0.25rem !important;
+  }
+
+  .mobile-player-pane--full .mobile-track-title {
+    font-size: clamp(1.125rem, 4.2vw, 1.5rem);
+    margin-bottom: 0.25rem !important;
+  }
+
+  .mobile-player-pane--full .mobile-track-artist {
+    font-size: 0.95rem;
+  }
+
+  .mobile-player-pane--full .mini-player-controls {
+    gap: clamp(1.5rem, 8vw, 2.5rem);
+  }
+
+  .mobile-player-pane--full .mini-control-button {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+
+  .mobile-player-pane--full .mini-play-button {
+    width: 4rem !important;
+    height: 4rem !important;
+  }
+
+  .mobile-player-pane--mini {
+    order: 2;
+    flex: 0 0 4.75rem !important;
+    width: 100%;
+    height: 4.75rem !important;
+    padding: 0.25rem 0.5rem !important;
+  }
+
+  .mobile-player-pane--mini .mini-host-bar {
+    display: none !important;
+  }
+
+  .mobile-player-pane--mini .mini-player-card {
+    position: relative;
+    flex: 1 1 0% !important;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    min-height: 0;
+    margin: 0 !important;
+    padding: 0.5rem 0.625rem !important;
+    border-radius: 0.75rem !important;
+  }
+
+  .mobile-player-pane--mini .mini-player-content {
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .mobile-player-pane--mini .mini-track-heading {
+    flex: 1 1 0%;
+    min-width: 0;
+    margin: 0 !important;
+    gap: 0.5rem !important;
+  }
+
+  .mobile-player-pane--mini .mini-track-art {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+  }
+
+  .mobile-player-pane--mini .mini-track-title {
+    font-size: 0.875rem;
+    margin: 0 !important;
+  }
+
+  .mobile-player-pane--mini .mini-track-artist {
+    font-size: 0.75rem;
+    margin: 0 !important;
+  }
+
+  .mobile-player-pane--mini .mini-player-controls {
+    flex: none;
+    gap: 0.125rem !important;
+  }
+
+  .mobile-player-pane--mini .mini-control-button {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+
+  .mobile-player-pane--mini .mini-play-button {
+    width: 2.25rem !important;
+    height: 2.25rem !important;
+  }
+
+  .mobile-player-pane--mini .mini-player-hide {
+    display: none !important;
+  }
+
+  .mobile-player-pane--mini .mobile-mini-progress {
+    display: block !important;
+    position: absolute;
+    left: 0.625rem;
+    right: 0.625rem;
+    bottom: 0;
+    width: auto;
+    height: 2px;
+    margin: 0;
+    border-radius: 0;
+    z-index: 2;
+  }
+
+  .mobile-player-pane--mini .mobile-mini-progress input {
+    top: -10px;
+    height: 22px;
+  }
+}
+
+/* Keep the room's tabbed mobile layout through tablet landscape widths. Three
+   columns are too compressed until the available width can support them. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .room-main {
+    flex-direction: column !important;
+  }
+
+  .room-panels {
+    display: flex !important;
+    flex: 1 1 0% !important;
+    width: 100%;
+    min-height: 0;
+    order: 1;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 0;
+  }
+
+  .room-main[data-active-panel="player"] .room-panels {
+    display: none !important;
+  }
+
+  .room-panels > .queue-panel,
+  .room-panels > .chat-panel {
+    display: none !important;
+  }
+
+  .room-main[data-active-panel="queue"] .room-panels > .queue-panel,
+  .room-main[data-active-panel="chat"] .room-panels > .chat-panel {
+    display: flex !important;
+  }
+
+  .room-panels > .queue-panel {
+    padding: 1rem 1.25rem;
+  }
+
+  .room-panels > .queue-panel .room-queue-list {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .room-panels > .chat-panel > .glass-panel {
+    flex: 1 1 0% !important;
+    height: auto !important;
+  }
+
+  .room-mobile-nav {
+    display: grid !important;
+  }
+}
+
+/* Short phones and landscape screens can scroll the full player instead of
+   clipping its controls when the dynamic viewport gets shallow. */
+@media (max-width: 1279px) and (max-height: 640px) {
+  .mobile-player-pane--full {
+    overflow-y: auto !important;
+    overscroll-behavior-y: contain;
+  }
+
+  .mobile-player-pane--full .mini-player-card {
+    flex: 0 0 auto !important;
+    min-height: max-content;
+    overflow: visible !important;
+  }
+
+  .mobile-player-pane--full .mini-player-content {
+    height: auto !important;
+    justify-content: flex-start;
+    gap: 0.75rem;
+  }
+
+  .mobile-player-pane--full .mini-track-art {
+    width: clamp(7rem, 26dvh, 10.5rem) !important;
+    height: clamp(7rem, 26dvh, 10.5rem) !important;
+  }
+}
+
+/* ---- Retro vinyl turntable --------------------------------------------- */
+/* Black record with grooves + colorful center label (the artwork). Spins
+   while playing; freezing via animation-play-state keeps the needle-looking
+   position natural instead of snapping back to 0 when paused. */
+.vinyl-disc {
+  background: radial-gradient(circle at 32% 28%, #26262a 0%, #121214 38%, #060607 74%, #000 100%);
+  box-shadow:
+    0 14px 44px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 0 24px rgba(0, 0, 0, 0.8);
+}
+
+.vinyl-grooves {
+  background: repeating-radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.09) 0px,
+    rgba(255, 255, 255, 0.09) 1px,
+    transparent 1px,
+    transparent 3.5px
+  );
+  -webkit-mask-image: radial-gradient(circle at center, transparent 0px, transparent 21%, black 23%, black 92%, transparent 96%);
+  mask-image: radial-gradient(circle at center, transparent 0px, transparent 21%, black 23%, black 92%, transparent 96%);
+}
+
+.vinyl-sheen {
+  background: conic-gradient(
+    from 210deg at 50% 50%,
+    rgba(255, 255, 255, 0.14) 0deg,
+    transparent 55deg,
+    rgba(255, 255, 255, 0.05) 140deg,
+    transparent 215deg,
+    rgba(255, 255, 255, 0.1) 305deg,
+    rgba(255, 255, 255, 0.14) 360deg
+  );
+}
+
+.vinyl-label {
+  background: linear-gradient(135deg, #3a3a40, #202024);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25), 0 0 22px rgba(139, 92, 246, 0.35);
+}
+
+.vinyl-hole {
+  background: #0a0a0a;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.85), 0 0 0 3px rgba(255, 255, 255, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vinyl-disc .animate-\[spin_8s_linear_infinite\] {
+    animation: none !important;
+  }
+}
+
+/* ---- Scrolling (marquee) track title ------------------------------------ */
+/* Long titles tick by like a retro jukebox display; animation-play-state
+   mirrors playback so the ticker pauses with the music. */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-scroll {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: marquee-scroll 14s linear infinite;
+}
+
+.marquee-scroll > span {
+  padding-right: 3rem;
+}
+
+/* Soft fade at both edges of a scrolling title */
+.marquee-edge {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 1.5rem, black calc(100% - 1.5rem), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, black 1.5rem, black calc(100% - 1.5rem), transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-scroll {
+    animation: none !important;
+  }
+}

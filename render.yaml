@@ -1,0 +1,14 @@
+# Render Blueprint — deploys the Socket.IO backend.
+# Frontend (Next.js at repo root) deploys on Vercel.
+services:
+  - type: web
+    name: vibesync-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    plan: free
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
