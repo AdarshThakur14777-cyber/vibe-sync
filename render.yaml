@@ -1,14 +1,21 @@
 # Render Blueprint — deploys the Socket.IO backend.
 # Frontend (Next.js at repo root) deploys on Vercel.
 services:
-  - type: web
+  - type: web_service
     name: vibesync-backend
-    runtime: node
+    ownerId: tea-dbob82ou01pc73eoqne0
+    repo: https://github.com/AdarshThakur14777-cyber/vibe-sync
+    branch: main
+    autoDeployTrigger: commit
     rootDir: backend
-    buildCommand: npm install
-    startCommand: npm start
-    healthCheckPath: /health
-    plan: free
+    serviceDetails:
+      runtime: node
+      healthCheckPath: /health
+      plan: free
+      region: oregon
+      envSpecificDetails:
+        buildCommand: npm install
+        startCommand: npm start
     envVars:
       - key: NODE_VERSION
         value: "20"
